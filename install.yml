@@ -1,0 +1,45 @@
+---
+
+- hosts: server
+
+- name: Prepare Environmment
+  import_playbook: prepare-env.yml
+  tags:
+    - basic
+    - prepare-env
+
+- name: Install rclone
+  import_playbook: install-rclone.yml
+  tags:
+    - basic
+    - install-rclone
+     
+- name: Launch rclone
+  import_playbook: launch-rclone.yml
+  tags:
+    - basic
+    - launch
+    - launch-rclone
+
+- name: Install Plex
+  import_playbook: install-plex.yml
+  tags:
+    - basic
+    - install-plex
+
+- name: Install Cron
+  import_playbook: install-cron.yml
+  tags:
+    - basic
+    - install-cron
+
+- name: Install Docker
+  import_playbook: install-docker.yml
+  tags:
+    - extras
+    - install-docker
+
+- name: Launch Docker
+  import_playbook: launch-docker.yml
+  tags:
+    - extras

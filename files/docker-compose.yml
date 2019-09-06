@@ -1,0 +1,71 @@
+version: "2"
+services:
+  transmission:
+    image: linuxserver/transmission
+    container_name: transmission
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+    volumes:
+      - /home/docker/transmission/config:/config
+      - /home/docker/downloads:/downloads
+      - /home/docker/watch:/watch
+    ports:
+      - 9091:9091
+      - 51413:51413
+      - 51413:51413/udp
+    restart: unless-stopped
+
+  tautulli:
+    image: linuxserver/tautulli
+    container_name: tautulli
+    environment:
+      - TZ=Europe/Madrid
+    volumes:
+      - /home/docker/tautulli/config:/config
+      - /home/docker/tautulli/config/logs:/logs
+    ports:
+      - 9092:8181
+    restart: unless-stopped
+
+  jdownloader:
+    image: jaymoulin/jdownloader
+    container_name: jdownloader
+    environment:
+      - TZ=Europe/Madrid
+    volumes:
+      - /home/docker/jdownloader/cfg:/opt/JDownloader/cfg
+      - "/home/docker/downloads/complete:/root/Downloads"
+    ports:
+      - 9094:8080
+    restart: unless-stopped
+
+  ombi:
+    image: linuxserver/ombi
+    container_name: ombi
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+    volumes:
+      - /home/docker/ombi/config:/config
+    ports:
+      - 9095:3579
+    restart: unless-stopped
+
+  flexget:
+    image: cpoppema/docker-flexget
+    container_name: flexget
+    environment:
+      - WEB_PASSWD="{{flexget_password}}"
+      - TORRENT_PLUGIN=transmission
+      - FLEXGET_LOG_LEVEL=debug
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+    volumes:
+      - /home/docker/flexget/config:/config
+      - /home/docker/downloads:/downloads
+      - /home/docker/watch:/watch
+    restart: unless-stopped

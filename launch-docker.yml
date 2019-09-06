@@ -1,0 +1,24 @@
+---
+
+- hosts: server
+  tasks:
+
+    - name: Create Docker Dirs
+      file: path="{{item.src}}" state=directory mode={{item.mode}}
+      with_items:
+        - { src: "/home/docker/" , mode: "0755" }
+        - { src: "/home/docker/downloads/" , mode: "0777" }
+        - { src: "/home/docker/downloads/complete/" , mode: "0777" }
+        - { src: "/home/docker/downloads/incomplete/" , mode: "0777" }
+
+    - name: Copy docker-compose
+      copy:
+        src: files/docker-compose.yml
+        dest: /home/docker/
+      tags:        
+        - docker
+
+    - name: Start Docker Containers
+      shell: "docker-compose -f /home/docker/docker-compose.yml up -d"
+      tags:
+        - docker            

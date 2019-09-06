@@ -1,0 +1,29 @@
+---
+
+- hosts: server
+  tasks:
+
+    - name: Install packages
+      apt:
+        name:
+        - fuse
+        - curl
+        - unzip
+
+    - name: Download rclone
+      shell: "curl https://rclone.org/install.sh | sudo bash"
+
+    - name: Create config rclone dir
+      file: path=".config" state=directory mode="0700"
+      tags:
+        - rclone-custom
+
+    - name: Create config rclone config dir
+      file: path=".config/rclone" state=directory mode="0755"
+      tags:
+        - rclone-custom
+
+    - name: Copy custom rclone config
+      copy: src="files/rclone.conf" dest=".config/rclone/" mode="0600"
+      tags:
+        - rclone-custom

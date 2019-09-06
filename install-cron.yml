@@ -1,0 +1,9 @@
+---
+
+- hosts: server
+  tasks:
+    - name: Copy Cronfile
+      template: src="files/root.crontab.j2" dest="cron/root.crontab"
+
+    - name: Install Cron
+      shell: "crontab cron/root.crontab"

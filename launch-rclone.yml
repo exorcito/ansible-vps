@@ -1,0 +1,14 @@
+---
+
+- hosts: server
+  tasks:
+
+    - name: Launch rclone
+      shell: "{{ item }}"
+      async: 10
+      poll: 0
+      with_items:
+        - "rclone mount --allow-other --allow-non-empty -v galiflix: {{vps_dir}}/Others"
+        - "rclone mount --allow-other --allow-non-empty -v 4k:  {{vps_dir}}/4K"
+        - "rclone mount --allow-other --allow-non-empty -v series: {{vps_dir}}/Series"
+        - "rclone mount --allow-other --allow-non-empty -v 4kmicro: {{vps_dir}}/4KMicro"

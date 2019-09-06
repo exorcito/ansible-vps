@@ -1,0 +1,19 @@
+---
+
+- hosts: server
+  tasks:
+    - name: Create Plex Dirs
+      file: path="{{item.src}}" state=directory mode={{item.mode}}
+      with_items:
+        - { src: "{{vps_dir}}/{{vps_td1_name}}" , mode: "0755" }
+        - { src: "{{vps_dir}}/{{vps_td2_name}}" , mode: "0755" }
+        - { src: "{{vps_dir}}/{{vps_td3_name}}" , mode: "0755" }
+        - { src: "{{vps_dir}}/{{vps_drive_name}}" , mode: "0755" }
+
+
+    - name: Install Scripts
+      template: src="files/scripts/{{item}}" dest="scripts/"
+      with_items:
+        - df.sh
+        - complete.sh
+        - telegrambot.py

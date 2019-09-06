@@ -1,0 +1,16 @@
+---
+
+- hosts: server
+  tasks:
+
+    - name: Import Plex repository
+      shell: "echo deb https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list"
+
+    - name: Add Plex Key
+      shell: "curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add -"
+
+    - name: Ensure that Aptitude repositories are up to date
+      apt: update_cache=yes cache_valid_time={{ aptcachetime }}
+
+    - name: Install Docker-ce
+      apt: pkg=plexmediaserver state=latest update_cache=yes

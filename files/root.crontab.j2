@@ -1,0 +1,56 @@
+# Edit this file to introduce tasks to be run by cron.
+# 
+# Each task to run has to be defined through a single line
+# indicating with different fields when the task will be run
+# and what command to run for the task
+# 
+# To define the time you can provide concrete values for
+# minute (m), hour (h), day of month (dom), month (mon),
+# and day of week (dow) or use '*' in these fields (for 'any').# 
+# Notice that tasks will be started based on the cron's system
+# daemon's notion of time and timezones.
+# 
+# Output of the crontab jobs (including errors) is sent through
+# email to the user the crontab file belongs to (unless redirected).
+# 
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+# 
+# For more information see the manual pages of crontab(5) and cron(8)
+# 
+# m h  dom mon dow   command
+
+# Rclone
+@reboot rclone mount --allow-other --allow-non-empty -v galiflix: "{{vps_dir}}/Others" &
+@reboot rclone mount --allow-other --allow-non-empty -v 4k: "{{vps_dir}}/4K" &
+@reboot rclone mount --allow-other --allow-non-empty -v series: "{{vps_dir}}/Series" &
+@reboot rclone mount --allow-other --allow-non-empty -v 4kmicro: "{{vps_dir}}/4KMicro" &
+
+# Restart Docker
+0 5 * * * docker restart tautulli
+0 6 * * * docker restart filebot
+
+# Scripts Mantenimiento / Bot
+@reboot python /root/scripts/telegrambot.py
+0 * * * * /root/scripts/complete.sh >> /root/logs/complete.log 2>&1
+15 * * * * /root/scripts/df.sh >> /root/logs/df.log 2>&1
+
+# Transmission
+0 1 * * * docker start transmission
+0 15 * * * docker stop transmission
+
+# Plex
+0 5 * * * service plexmediaserver restart
+
+# Script Movimiento
+0 * * * * mv /home/docker/downloads/complete/*1080* "{{vps_dir}}/{{vps_drive_name}}/Peliculas/"
+5 * * * * mv /home/docker/downloads/complete/*DVDRIP* "{{vps_dir}}/{{vps_drive_name}}/Peliculas/"
+20 * * * * mv /home/docker/downloads/complete/*Rip* "{{vps_dir}}/{{vps_drive_name}}/Peliculas/"
+15 * * * * mv /home/docker/downloads/complete/*DVDRip* "{{vps_dir}}/{{vps_drive_name}}/Peliculas/"
+40 * * * * mv /home/docker/downloads/complete/*4Kmicro* "{{vps_dir}}/{{vps_td3_name}}/"
+50 * * * * mv /home/docker/downloads/complete/*UHDmicro* "{{vps_dir}}/{{vps_td3_name}}/"
+10 * * * * mv /home/docker/downloads/complete/*UHDrip* "{{vps_dir}}/{{vps_td3_name}}/"
+
+# Script unzip
+0 * * * * unzip -d /home/docker/watch/ /home/docker/watch/*.zip && rm /home/docker/watch/*.zip
