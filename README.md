@@ -10,5 +10,7 @@
 ## Installation
 
 git clone https://github.com/exorcito/ansible-vps
+
 custom with your values the file => /group_vars/all/all.yml
+
 launch with ansible-playbook
