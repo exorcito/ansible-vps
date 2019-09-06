@@ -1,4 +1,4 @@
-# Install rclone/plex from scratch automated by Ansible ( VPS Automated Install )
+# VPS Automated Install from scratch with Ansible
 
 **Highlights**
 
